@@ -1,0 +1,6 @@
+attrs>=20.3.0
+numpy>=1.16.2
+pandas>=0.24.1
+plotnine>=0.5.1
+PyYAML==3.12
+scipy>=1.2.1

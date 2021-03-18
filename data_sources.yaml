@@ -1,0 +1,8 @@
+game_results:
+    type: GoogleSheet
+    description: >
+        Google sheets file with game records, including
+        player start positions, and final points.
+    kwargs:
+        key: "14gkH1RncqzQkIhfCObmlfAYht0ypWfUqT859XwWyP3M"
+        gid: "385905243"
