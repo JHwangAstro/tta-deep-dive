@@ -1,4 +1,4 @@
-""" Load data sources in a ergonomic way.
+""" Ergonomically load data sources.
 """
 
 from typing import Dict
