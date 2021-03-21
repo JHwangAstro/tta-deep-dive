@@ -1,0 +1,8 @@
+# Dataframes created from input data sources.
+
+game_results_by_player:
+    description: >
+        Map (game_id, player) to (result, score). Useful
+        in performing per-player calculations.
+    inputs:
+        - game_results_with_seating

@@ -1,24 +1,24 @@
-""" Ergonomically load data sources.
+""" Define data sources.
 """
 
-from typing import Dict
+from typing import Dict, Union
 
 import attr
 import pandas as pd
 import yaml
 
 
-Config = Dict[str, str]
+ConfigType = Dict[str, str]
 
 
 @attr.s(auto_attribs=True, repr=False)
-class Config(object):
+class DataSourceConfig(object):
     """ Load configuration from yaml file.
     """
-    filename: str = "./data_sources.yaml"
+    filename: str = "../data_sources.yaml"
 
     def __repr__(self) -> str:
-        return f"Config({self.filename})"
+        return f"DataSourceConfig({self.filename})"
 
     @property
     def data_sources(self) -> Dict[str, Dict[str, str]]:
@@ -35,21 +35,23 @@ class Config(object):
 class DataSource(object):
     """ Template class loading data from a configuration.
     """
+    config: ConfigType
+
     @classmethod
-    def from_config(cls, config: Config, node: str = None):
+    def from_config(cls, config: ConfigType, node: str = None):
         """ Create a GoogleSheets class from a config.
         """
-        return cls(**config.get("kwargs"))
+        return cls(**config.get("kwargs"), config=config)
 
     @classmethod
     def from_config_file(
         cls,
         node: str,
-        filename: str = "./data_sources.yaml"
+        filename: str = "../data_sources.yaml"
     ):
         """ Create a GoogleSheets class from a configuration file.
         """
-        data_sources = Config(filename=filename).data_sources
+        data_sources = DataSourceConfig(filename=filename).data_sources
 
         assert node in data_sources, f"{node} not found in config."
 
@@ -81,24 +83,29 @@ class GoogleSheets(DataSource):
 
         return f"https://{host}/{base_path}/{key}/export?format=csv&gid={gid}"
 
-    def as_pandas(self, sep: str = ",") -> pd.DataFrame:
+    def as_pandas(self, sep: str = ",", **kwargs) -> pd.DataFrame:
         """ Return the csv as pandas.
         """
-        return pd.read_csv(self.url, sep=sep)
+        cols = self.config.get("cols", None)
+        names = (None if cols is None else list(cols))
+
+        return pd.read_csv(self.url, sep=sep, names=names, **kwargs)
 
 
 data_source_map = {
     "googlesheet": GoogleSheets
 }
 
+DataSourceType = Union[GoogleSheets]
 
-def data_source(
+
+def get_data_source(
     node: str,
-    filename: str = "./data_sources.yaml"
-) -> DataSource:
+    filename: str = "../data_sources.yaml"
+) -> DataSourceType:
     """ Return a data source object
     """
-    data_sources = Config(filename=filename).data_sources
+    data_sources = DataSourceConfig(filename=filename).data_sources
 
     assert node in data_sources, f"{node} not found in config."
 

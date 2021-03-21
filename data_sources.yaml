@@ -1,4 +1,4 @@
-game_results:
+game_results_with_seating:
     type: GoogleSheet
     description: >
         Google sheets file with game records, including
@@ -6,3 +6,24 @@ game_results:
     kwargs:
         key: "14gkH1RncqzQkIhfCObmlfAYht0ypWfUqT859XwWyP3M"
         gid: "385905243"
+
+aggregated_results:
+    type: GoogleSheet
+    description: >
+        Contains results from games over three tournament
+        series - international championships, intermezzo,
+        and transcontinental ladder.
+    kwargs:
+        key: "10mrIwZNchMz7FMYgddUnniqm82VCYFJJPZJqEDP75F0"
+        gid: "1155264223"
+    cols:
+        - tournament
+        - date
+        - p1
+        - score1
+        - p2
+        - score2
+        - p3
+        - score3
+        - p4
+        - score4
