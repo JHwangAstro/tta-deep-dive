@@ -18,7 +18,8 @@ data_source = fetch.data_source(node="game_results_with_seating")
 
 df = data_source.as_pandas()
 
-# Return a transformed dataframe.
+# Return a transformed dataframe following the logic defined in
+# ./views/game_results_by_player.py
 view = fetch.view(node="game_results_by_player")
 
 transformed_df = view.as_pandas()
