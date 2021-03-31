@@ -5,4 +5,5 @@ game_results_by_player:
         Map (game_id, player) to (result, score). Useful
         in performing per-player calculations.
     inputs:
-        - game_results_with_seating
+        - game_results_with_seating_season8
+        - game_results_with_seating_season9

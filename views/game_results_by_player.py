@@ -6,8 +6,8 @@ import pandas as pd
 def view(input_dataframes, **kwargs) -> pd.DataFrame:
     """ Dataframe mapping game results and starting place to game and player.
     """
-    # Load the data from the url and rename columns.
     renamed_cols = {
+        "season": "season",
         "division": "division",
         "position1": "1st position",
         "position2": "2nd position",
@@ -20,11 +20,23 @@ def view(input_dataframes, **kwargs) -> pd.DataFrame:
         "points3": "3rd points"
     }
 
+    season_8_df = (
+        input_dataframes.get("game_results_with_seating_season8")
+        .assign(season=8)
+    )
+
+    season_9_df = (
+        input_dataframes.get("game_results_with_seating_season9")
+        .assign(season=9)
+    )
+
+    combined_df = pd.concat((season_8_df, season_9_df))
+
     df = (
         functools.reduce(
             lambda df, item: df.assign(**{item[0]: df[item[1]]}),
             renamed_cols.items(),
-            input_dataframes.get("game_results_with_seating")
+            combined_df 
         )
         [renamed_cols.keys()]
     )
@@ -59,7 +71,7 @@ def view(input_dataframes, **kwargs) -> pd.DataFrame:
     start_position_df = (
         pd.melt(
             filtered_df,
-            id_vars=["division", "game_id"],
+            id_vars=["season", "division", "game_id"],
             value_vars=["position1", "position2", "position3"],
             var_name="position_str",
             value_name="player"
@@ -71,6 +83,7 @@ def view(input_dataframes, **kwargs) -> pd.DataFrame:
             )
         )
         .drop("position_str", axis=1)
+        .assign(player=lambda df: df.player.apply(lambda x: x.replace(" ", "")))
         .reset_index(drop=True)
     )
 
@@ -80,7 +93,7 @@ def view(input_dataframes, **kwargs) -> pd.DataFrame:
     finish_df = (
         pd.melt(
             filtered_df,
-            id_vars=["division", "game_id"],
+            id_vars=["season", "division", "game_id"],
             value_vars=["finish_points1", "finish_points2", "finish_points3"],
             var_name="finish_points_str",
             value_name="player_points"
@@ -93,6 +106,7 @@ def view(input_dataframes, **kwargs) -> pd.DataFrame:
                 for pos in df.finish_points_str
             )
         )
+        .assign(player=lambda df: df.player.apply(lambda x: x.replace(" ", "")))
         .drop(["finish_points_str", "player_points"], axis=1)
         .reset_index(drop=True)
     )
@@ -106,7 +120,7 @@ def view(input_dataframes, **kwargs) -> pd.DataFrame:
 
     ordered_divisions = (
         finish_df
-        [["division", "player"]]
+        [["season", "division", "player"]]
         .drop_duplicates()
         .groupby("division")
         .agg({"player": "count"})
@@ -131,10 +145,9 @@ def view(input_dataframes, **kwargs) -> pd.DataFrame:
     finish_by_start_df = (
         finish_df.merge(
             start_position_df,
-            on=["division", "game_id", "player"],
+            on=["season", "division", "game_id", "player"],
             how="inner"
         )
-        .assign(player=lambda df: df.player.astype("category").cat.codes)
         .assign(
             division=pd.Categorical(
                 finish_df.division,
