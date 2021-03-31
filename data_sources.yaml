@@ -1,11 +1,29 @@
-game_results_with_seating:
+game_results_with_seating_season8:
+    type: GoogleSheet
+    description: >
+        Google sheets file with game records, including
+        player start positions, and final points for season 8.
+    kwargs:
+        key: "14gkH1RncqzQkIhfCObmlfAYht0ypWfUqT859XwWyP3M"
+        gid: "385905243"
+
+game_results_with_seating_season9:
+    type: GoogleSheet
+    description: >
+        Google sheets file with game records, including
+        player start positions, and final points for season 9.
+    kwargs:
+        key: "14gkH1RncqzQkIhfCObmlfAYht0ypWfUqT859XwWyP3M"
+        gid: "385905243"
+
+game_results_with_seating_season8:
     type: GoogleSheet
     description: >
         Google sheets file with game records, including
         player start positions, and final points.
     kwargs:
         key: "14gkH1RncqzQkIhfCObmlfAYht0ypWfUqT859XwWyP3M"
-        gid: "385905243"
+        gid: "1110697297"
 
 aggregated_results:
     type: GoogleSheet
@@ -27,3 +45,19 @@ aggregated_results:
         - score3
         - p4
         - score4
+
+historical_ratings:
+    type: GoogleSheet
+    description: >
+        Historical glicko2 scores by player.
+    kwargs:
+        key: "10mrIwZNchMz7FMYgddUnniqm82VCYFJJPZJqEDP75F0"
+        gid: "1773741739"
+
+historical_ratings_complete:
+    type: GoogleSheet
+    description: >
+        Historical glicko2 scores by player.
+    kwargs:
+        key: "1RwPfkzAsTGUWj0L3Sup-HhZNnJqVFLoDSI8lOkBLSZk"
+        gid: "0"
